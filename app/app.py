@@ -42,7 +42,7 @@ def home():
     return f'''
     <html>
     <body style="font-family:Arial; max-width:500px; margin:40px auto">
-        <h2>To-Do App v3 - With Database!</h2>
+        <h2>To-Do App v3 - CI/CD Works!</h2>
         <form method="POST" action="/add">
             <input name="task" placeholder="Enter a task"
                 style="padding:8px; width:300px"/>
