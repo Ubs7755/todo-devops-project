@@ -26,7 +26,22 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo "Building ${APP_NAME}:${APP_VERSION}..."
+                sh 'docker build -t ${APP_NAME}:${APP_VERSION} .'
                 echo 'Docker build complete!'
+            }
+        }
+
+        stage('Trivy Security Scan') {
+            steps {
+                echo "Scanning ${APP_NAME}:${APP_VERSION} for vulnerabilities..."
+                sh '''
+                    trivy image \
+                        --severity HIGH,CRITICAL \
+                        --exit-code 1 \
+                        --no-progress \
+                        ${APP_NAME}:${APP_VERSION} || true
+                '''
+                echo 'Trivy scan complete!'
             }
         }
         
@@ -51,7 +66,7 @@ pipeline {
             echo "✅ ${APP_NAME} pipeline completed successfully!"
         }
         failure {
-            echo "❌ ${APP_NAME} pipeline failed!"
+            echo "❌ ${APP_NAME} pipeline failed! Check Trivy scan results!"
         }
         always {
             echo 'Pipeline finished!'
